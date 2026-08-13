@@ -15,6 +15,7 @@ export const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [debugMode, setDebugMode] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Modals
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -39,7 +40,7 @@ export const App: React.FC = () => {
         setActiveSessionId(data[0].session_id);
       }
     } catch (err) {
-      console.error('Failed to load graph sessions:', err);
+      console.error('Failed to load sessions:', err);
     }
   };
 
@@ -49,6 +50,7 @@ export const App: React.FC = () => {
       setSessions([newSession, ...sessions]);
       setActiveSessionId(newSession.session_id);
       setMessages([]);
+      setIsSidebarOpen(false);
     } catch (err) {
       console.error('Failed to create session:', err);
     }
@@ -92,7 +94,6 @@ export const App: React.FC = () => {
         sender: 'assistant',
         text: res.answer,
         timestamp: new Date().toISOString(),
-        graph_data: res.graph_data,
         metadata: res.metadata
       };
 
@@ -116,7 +117,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', background: 'var(--bg-primary)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', background: 'var(--bg-primary)', position: 'fixed', inset: 0, overflow: 'hidden' }}>
       <Header
         user={user}
         onOpenLogin={() => setIsLoginOpen(true)}
@@ -125,21 +126,25 @@ export const App: React.FC = () => {
         onOpenMutation={() => setIsMutationOpen(true)}
         debugMode={debugMode}
         setDebugMode={setDebugMode}
+        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
       />
 
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
         <SessionSidebar
           sessions={sessions}
           activeSessionId={activeSessionId}
           onSelectSession={(id) => {
             setActiveSessionId(id);
             setMessages([]);
+            setIsSidebarOpen(false);
           }}
           onCreateSession={handleCreateSession}
           onDeleteSession={handleDeleteSession}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
         />
 
-        <main style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <main style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', minWidth: 0, overflow: 'hidden' }}>
           <ChatWindow
             messages={messages}
             isLoading={isLoading}

@@ -48,47 +48,47 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   };
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
-      <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px' }}>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', position: 'relative', overflow: 'hidden' }}>
+      <div className="chat-scroll-padding" style={{ flex: 1, overflowY: 'auto', padding: '24px 32px' }}>
         {messages.length === 0 ? (
-          <div style={{ maxWidth: '640px', margin: '40px auto', textAlign: 'center' }}>
+          <div style={{ maxWidth: '640px', margin: '20px auto', textAlign: 'center' }}>
             <div style={{
-              width: '60px',
-              height: '60px',
+              width: '54px',
+              height: '54px',
               borderRadius: '16px',
               background: 'var(--accent-gradient)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 20px auto',
+              margin: '0 auto 16px auto',
               boxShadow: 'var(--accent-glow)'
             }}>
-              <Network size={32} color="#fff" />
+              <Network size={28} color="#fff" />
             </div>
-            <h2 style={{ fontSize: '24px', fontWeight: 600, marginBottom: '8px' }}>
-              Welcome to Inventory Knowledge Graph Assistant
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '6px' }}>
+              Welcome to Inventory Knowledge Graph
             </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '28px' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '20px' }}>
               Explore multi-hop relationships, vendor dependencies, and asset locations across your supply chain.
             </p>
 
             <div style={{ textAlign: 'left' }}>
-              <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '12px' }}>
+              <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '10px' }}>
                 Multi-Hop Graph Queries:
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '10px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '8px' }}>
                 {EXAMPLE_GRAPH_QUESTIONS.map((q, idx) => (
                   <button
                     key={idx}
                     onClick={() => onSendMessage(q)}
                     style={{
-                      padding: '12px 16px',
-                      background: 'rgba(15, 23, 42, 0.5)',
+                      padding: '10px 14px',
+                      background: 'rgba(30, 41, 59, 0.4)',
                       border: '1px solid var(--border-color)',
                       borderRadius: 'var(--radius-md)',
                       color: 'var(--text-primary)',
                       textAlign: 'left',
-                      fontSize: '13px',
+                      fontSize: '12px',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
@@ -102,18 +102,19 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
             </div>
           </div>
         ) : (
-          <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {messages.map((msg) => {
               const isUser = msg.sender === 'user';
               return (
                 <div
                   key={msg.id}
-                  className="animate-fade-in"
+                  className="animate-fade-in chat-message-bubble"
                   style={{
                     display: 'flex',
-                    gap: '14px',
+                    gap: '12px',
                     alignSelf: isUser ? 'flex-end' : 'flex-start',
-                    maxWidth: '88%'
+                    maxWidth: '85%',
+                    width: '100%'
                   }}
                 >
                   {!isUser && (
@@ -127,32 +128,37 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
                       justifyContent: 'center',
                       flexShrink: 0
                     }}>
-                      <Network size={18} color="#fff" />
+                      <Network size={17} color="#fff" />
                     </div>
                   )}
 
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
-                      padding: '14px 18px',
+                      padding: '12px 16px',
                       borderRadius: isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                      background: isUser ? 'var(--accent-gradient)' : 'rgba(15, 23, 42, 0.75)',
+                      background: isUser ? 'var(--accent-gradient)' : 'rgba(30, 41, 59, 0.6)',
                       border: isUser ? 'none' : '1px solid var(--border-color)',
                       color: '#fff',
                       fontSize: '14px',
                       whiteSpace: 'pre-wrap',
-                      lineHeight: 1.6
+                      lineHeight: 1.5,
+                      wordBreak: 'break-word'
                     }}>
                       {msg.text}
                     </div>
 
-                    {/* Render Graph Visualization if available */}
+                    {/* Interactive Force Graph Visualization */}
                     {!isUser && msg.graph_data && (
-                      <GraphVisualization graphData={msg.graph_data} />
+                      <div className="table-responsive" style={{ marginTop: '10px' }}>
+                        <GraphVisualization graphData={msg.graph_data} />
+                      </div>
                     )}
 
-                    {/* Show Cypher Debug Panel if active */}
+                    {/* Cypher Debug & Multi-Hop Telemetry Panel */}
                     {!isUser && debugMode && (
-                      <DebugPanel metadata={msg.metadata} />
+                      <div className="table-responsive">
+                        <DebugPanel metadata={msg.metadata} />
+                      </div>
                     )}
                   </div>
 
@@ -168,7 +174,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
                       justifyContent: 'center',
                       flexShrink: 0
                     }}>
-                      <User size={18} color="var(--text-secondary)" />
+                      <User size={17} color="var(--text-secondary)" />
                     </div>
                   )}
                 </div>
@@ -176,7 +182,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
             })}
 
             {isLoading && (
-              <div style={{ display: 'flex', gap: '14px', alignSelf: 'flex-start', maxWidth: '85%' }}>
+              <div style={{ display: 'flex', gap: '12px', alignSelf: 'flex-start', maxWidth: '90%' }}>
                 <div style={{
                   width: '32px',
                   height: '32px',
@@ -187,21 +193,21 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
                   justifyContent: 'center',
                   flexShrink: 0
                 }}>
-                  <Network size={18} color="#fff" />
+                  <Network size={17} color="#fff" />
                 </div>
                 <div style={{
-                  padding: '14px 18px',
+                  padding: '12px 16px',
                   borderRadius: '16px 16px 16px 4px',
-                  background: 'rgba(15, 23, 42, 0.75)',
+                  background: 'rgba(30, 41, 59, 0.6)',
                   border: '1px solid var(--border-color)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  fontSize: '14px',
+                  fontSize: '13px',
                   color: 'var(--text-secondary)'
                 }}>
-                  <Loader2 size={16} className="animate-spin" />
-                  Traversing Neo4j Knowledge Graph & reasoning over relationships...
+                  <Loader2 size={15} className="animate-spin" />
+                  Traversing knowledge graph & executing Cypher...
                 </div>
               </div>
             )}
@@ -211,21 +217,22 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
         )}
       </div>
 
-      <div style={{
-        padding: '16px 24px',
+      <div className="chat-input-wrapper" style={{
+        padding: '14px 20px',
         borderTop: '1px solid var(--border-color)',
-        background: 'rgba(7, 11, 18, 0.95)'
+        background: 'rgba(7, 11, 18, 0.95)',
+        zIndex: 10
       }}>
-        <form onSubmit={handleSubmit} style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', gap: '12px' }}>
+        <form onSubmit={handleSubmit} style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', gap: '8px' }}>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask a multi-hop graph question (e.g. 'Which sites contain assets supplied by TechSupply?')..."
+            placeholder="Ask a graph query (e.g., 'Where is asset TAG-1001 located?')..."
             rows={1}
             style={{
               flex: 1,
-              padding: '12px 16px',
+              padding: '10px 14px',
               borderRadius: 'var(--radius-md)',
               background: 'var(--bg-secondary)',
               border: '1px solid var(--border-color)',
@@ -242,9 +249,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
             type="submit"
             className="btn btn-primary"
             disabled={!input.trim() || isLoading}
-            style={{ opacity: !input.trim() || isLoading ? 0.5 : 1, padding: '0 20px' }}
+            style={{ opacity: !input.trim() || isLoading ? 0.5 : 1, padding: '0 16px', flexShrink: 0 }}
           >
-            <Send size={16} />
+            <Send size={15} />
           </button>
         </form>
       </div>
