@@ -19,7 +19,7 @@ const GROUP_COLORS: Record<string, string> = {
 };
 
 export const GraphVisualization: React.FC<GraphVisualizationProps> = ({ graphData }) => {
-  if (!graphData || (!graphData.nodes.length && !graphData.edges.length)) {
+  if (!graphData || (!graphData.nodes?.length && !graphData.edges?.length)) {
     return null;
   }
 
@@ -29,34 +29,39 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({ graphDat
   return (
     <div style={{
       marginTop: '12px',
-      padding: '14px 18px',
+      padding: '12px 14px',
       background: 'rgba(6, 78, 59, 0.25)',
       border: '1px solid rgba(16, 185, 129, 0.35)',
       borderRadius: 'var(--radius-md)',
-      fontSize: '13px'
+      fontSize: '12px'
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '6px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#6ee7b7', fontWeight: 600 }}>
-          <Network size={16} />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px 12px', marginBottom: '8px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '6px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#6ee7b7', fontWeight: 600 }}>
+          <Network size={15} />
           Knowledge Graph Subgraph Traversal
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-muted)', fontSize: '11px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-muted)', fontSize: '11px' }}>
           <span>{nodes.length} Nodes</span>
-          <span>{edges.length} Relationships</span>
+          <span>{edges.length} Edges</span>
         </div>
       </div>
 
       {/* Nodes Chips Grid */}
-      <div style={{ marginBottom: '10px' }}>
-        <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>
+      <div style={{ marginBottom: '8px' }}>
+        <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px', fontWeight: 600 }}>
           Traversed Nodes:
         </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
           {nodes.map((node) => {
             const colorClass = GROUP_COLORS[node.group] || 'node-asset';
             return (
-              <div key={node.id} className={`node-pill ${colorClass}`} title={JSON.stringify(node.properties || {})}>
-                <span style={{ fontSize: '10px', opacity: 0.75 }}>({node.group})</span>
+              <div
+                key={node.id}
+                className={`node-badge ${colorClass}`}
+                title={JSON.stringify(node.properties || {})}
+                style={{ fontSize: '11px', padding: '2px 6px' }}
+              >
+                <span style={{ fontSize: '9px', opacity: 0.75 }}>({node.group})</span>
                 <strong>{node.label}</strong>
               </div>
             );
@@ -67,10 +72,10 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({ graphDat
       {/* Directed Relationships Flow */}
       {edges.length > 0 && (
         <div>
-          <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>
+          <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px', fontWeight: 600 }}>
             Relationship Paths:
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
             {edges.map((edge, idx) => {
               const srcNode = nodes.find((n) => n.id === edge.source);
               const tgtNode = nodes.find((n) => n.id === edge.target);
@@ -83,16 +88,18 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({ graphDat
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px',
+                    flexWrap: 'wrap',
+                    gap: '6px',
                     background: 'rgba(15, 23, 42, 0.7)',
-                    padding: '6px 12px',
+                    padding: '6px 10px',
                     borderRadius: '6px',
                     border: '1px solid rgba(255, 255, 255, 0.05)',
-                    fontSize: '12px'
+                    fontSize: '11px',
+                    wordBreak: 'break-word'
                   }}
                 >
                   <span style={{ color: '#93c5fd', fontWeight: 500 }}>{srcLabel}</span>
-                  <span style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', background: 'rgba(16, 185, 129, 0.15)', padding: '2px 6px', borderRadius: '4px' }}>
+                  <span style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '3px', fontSize: '10px', background: 'rgba(16, 185, 129, 0.15)', padding: '2px 5px', borderRadius: '4px' }}>
                     -[:{edge.label}]-&gt;
                   </span>
                   <span style={{ color: '#fcd34d', fontWeight: 500 }}>{tgtLabel}</span>
