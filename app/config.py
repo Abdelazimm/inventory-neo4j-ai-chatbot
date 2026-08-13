@@ -1,3 +1,4 @@
+import os
 from typing import List, Union
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field, field_validator
@@ -18,7 +19,7 @@ class Settings(BaseSettings):
     CYPHER_TIMEOUT_SECONDS: int = Field(default=10)
 
     # State & Checkpoints
-    CHECKPOINTS_DB_PATH: str = Field(default="./neo4j_checkpoints.sqlite")
+    CHECKPOINTS_DB_PATH: str = Field(default="/tmp/neo4j_checkpoints.sqlite" if os.environ.get("VERCEL") else "./neo4j_checkpoints.sqlite")
 
     # Security & JWT
     JWT_SECRET: str = Field(default="inventory_neo4j_ai_jwt_secret_key_change_in_production_987654321")

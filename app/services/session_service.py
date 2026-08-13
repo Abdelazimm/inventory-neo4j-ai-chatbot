@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import uuid
 from datetime import datetime
@@ -5,7 +6,7 @@ from typing import List, Optional, Dict, Any
 from app.config import settings
 
 # Initialize a light SQLite database for storing Chat Session metadata
-SESSIONS_DB_PATH = "./neo4j_sessions.db"
+SESSIONS_DB_PATH = "/tmp/neo4j_sessions.db" if os.environ.get("VERCEL") else "./neo4j_sessions.db"
 
 
 def init_sessions_db():
