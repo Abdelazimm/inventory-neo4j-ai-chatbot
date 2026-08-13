@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { UserProfile, ChatSession, IngestPreview, GraphMutationPreview } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8001';
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://127.0.0.1:8001');
 
 const client = axios.create({
   baseURL: API_BASE_URL,
