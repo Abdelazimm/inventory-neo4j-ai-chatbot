@@ -1,0 +1,6 @@
+label,id,name,properties
+Asset,TAG-3001,MacBook Air M2,"{""cost"": 1099.0, ""status"": ""Active""}"
+Vendor,V009,Delta Components,"{""city"": ""Seattle"", ""country"": ""USA""}"
+Item,ITM-010,MacBook Air,"{""unit_of_measure"": ""EA""}"
+Site,S04,APAC Hub,"{""city"": ""Singapore"", ""timezone"": ""SGT""}"
+Location,APAC-L1,Singapore Warehouse,"{}"
